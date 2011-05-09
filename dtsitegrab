@@ -1,0 +1,61 @@
+#!/bin/bash
+# DT Site Grab - A simple script that uses wget to backup web sites.
+VER="0.3.2"
+# http://dt.tehspork.com
+# Dumb Terminal
+#  Smaller than Life Projects
+# Main Page: http://dt.tehspork.com
+# Git Repo: https://github.com/dumbterminal/
+# By: MikereDD & veekahn
+# email: dumbterminal -at- tehspork.com
+##
+# This script uses
+# WGet  -  www.gnu.org/software/wget/
+##
+# Save Directory
+SITEGRABDIR="$HOME/apps/sitegrab"
+SITEBKUPDIR="$SITEGRABDIR/sites"
+# Version
+echo ""
+echo "Site Grab V. $VER"
+echo ""
+echo ""
+# Check for WGet
+if [[ -z $( type -p wget ) ]]; then 
+      echo -e "wget -- NOT INSTALLED !";exit
+fi
+WHEREISWGET=$(whereis wget | awk '{print $2}')
+WGET="$WHEREISWGET"
+
+cd $SITEBKUPDIR
+WEBURL=$1
+if [ -z "$WEBURL" ];then
+    echo " Please Provide a URL Link.. (Example: http://dicksonfilm.com) "
+else
+    unset response
+# Check for Site Grab's Working Directory
+LSGETDIR=$(ls $SITEGRABDIR | grep "sites")
+if [ "$LSGETDIR" != "sites" ];then
+     mkdir -p "$SITEBKUPDIR"
+     echo " First Run - Directories Created." 
+     echo "   Please Run Aagin Now. "
+else
+#
+echo " Site|Folder need a UserName and Password?"
+echo " Enter User Name or Press Enter for No UserName"
+read LOGIN
+
+#
+echo " Enter Password or Press Enter for No Password"
+read PASSWD
+    echo " Grabbing Site ..."
+if [ "$LOGIN" != " " ];then
+    echo " No UserName|Password fetching request"
+   $WGET --random-wait -r -p -e robots=off -U mozilla $1
+   echo " Done..."
+   exit 0
+else
+   $WGET --random-wait -user=$LOGIN --password='$PASSWD' -r -p -e robots=off -U mozilla $1
+ fi
+ fi
+fi
