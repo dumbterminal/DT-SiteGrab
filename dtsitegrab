@@ -1,6 +1,6 @@
 #!/bin/bash
 # DT Site Grab - A simple script that uses wget to backup web sites.
-VER="0.3.2"
+VER="0.3.3"
 # http://dt.tehspork.com
 # Dumb Terminal
 #  Smaller than Life Projects
@@ -12,12 +12,21 @@ VER="0.3.2"
 # This script uses
 # WGet  -  www.gnu.org/software/wget/
 ##
+# To Do:                                                                                                                                                                                    
+#  Logging -X- Done 07/23/2011                                                                                                                                                                                  
+#  Limit rate                                                                                                                                                                               
+#  Cron script for timed backup                                                                                                                                                             
+#  Fetch url's from txt file (to be used with timed cron backup)
+##
 # Save Directory
-SITEGRABDIR="$HOME/apps/sitegrab"
+SITEGRABDIR="$HOME/_dtsitesgrabbed"
 SITEBKUPDIR="$SITEGRABDIR/sites"
+LOGSDIR="$SITEGRABDIR/logs"
+#URLSFILE="$SITEGRABDIR/urls.txt"
+##
 # Version
 echo ""
-echo "Site Grab V. $VER"
+echo "DT Site Grab V. $VER"
 echo ""
 echo ""
 # Check for WGet
@@ -30,7 +39,7 @@ WGET="$WHEREISWGET"
 cd $SITEBKUPDIR
 WEBURL=$1
 if [ -z "$WEBURL" ];then
-    echo " Please Provide a URL Link.. (Example: http://dicksonfilm.com) "
+    echo " Please Provide a URL Link.. (Example: dicksonfilm.com) "
 else
     unset response
 # Check for Site Grab's Working Directory
@@ -51,11 +60,11 @@ read PASSWD
     echo " Grabbing Site ..."
 if [ "$LOGIN" != " " ];then
     echo " No UserName|Password fetching request"
-   $WGET --random-wait -r -p -e robots=off -U mozilla $1
+   $WGET -o $LOGSDIR/${1}.log -m -k -K -E --no-check-certificate --random-wait -r -p -e robots=off -U mozilla $1
    echo " Done..."
    exit 0
 else
-   $WGET --random-wait -user=$LOGIN --password='$PASSWD' -r -p -e robots=off -U mozilla $1
+   $WGET -o $LOGSDIR/${1}.log -m -k -K -E --no-check-certificate --random-wait -user=$LOGIN --password='$PASSWD' -r -p -e robots=off -U mozilla $1
  fi
  fi
 fi
