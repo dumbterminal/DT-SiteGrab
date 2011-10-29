@@ -1,6 +1,6 @@
 #!/bin/bash
 # DT Site Grab - A simple script that uses wget to backup web sites.
-VER="0.3.3"
+VER="0.3.4"
 # http://dt.tehspork.com
 # Dumb Terminal
 #  Smaller than Life Projects
@@ -19,10 +19,10 @@ VER="0.3.3"
 #  Fetch url's from txt file (to be used with timed cron backup)
 ##
 # Save Directory
-SITEGRABDIR="$HOME/_dtsitesgrabbed"
-SITEBKUPDIR="$SITEGRABDIR/sites"
-LOGSDIR="$SITEGRABDIR/logs"
-#URLSFILE="$SITEGRABDIR/urls.txt"
+SITEGRABDIR="${HOME}/_dtsitesgrabbed"
+SITEBKUPDIR="${SITEGRABDIR}/sites"
+LOGSDIR="${SITEGRABDIR}/logs"
+#URLSFILE="${SITEGRABDIR}/urls.txt"
 ##
 # Version
 echo ""
@@ -57,14 +57,17 @@ read LOGIN
 #
 echo " Enter Password or Press Enter for No Password"
 read PASSWD
-    echo " Grabbing Site ..."
+#
+echo " Enter a Name for the Log File"
+read LOGFILE
+echo " Grabbing Site ..."
 if [ "$LOGIN" != " " ];then
     echo " No UserName|Password fetching request"
-   $WGET -o $LOGSDIR/${1}.log -m -k -K -E --no-check-certificate --random-wait -r -p -e robots=off -U mozilla $1
+    $WGET -o $LOGSDIR/$LOGFILE-$(date +'%m-%d-%Y_%R:%S').log -m -k -K -E --no-check-certificate --random-wait -r -p -e robots=off -U mozilla ${1}
    echo " Done..."
    exit 0
 else
-   $WGET -o $LOGSDIR/${1}.log -m -k -K -E --no-check-certificate --random-wait -user=$LOGIN --password='$PASSWD' -r -p -e robots=off -U mozilla $1
+    $WGET -o $LOGSDIR/$LOGFILE-$(date +'%m-%d-%Y_%R:%S').log -m -k -K -E --no-check-certificate --random-wait -user=$LOGIN --password='$PASSWD' -r -p -e robots=off -U mozilla ${1}
  fi
  fi
 fi
